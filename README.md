@@ -13,6 +13,20 @@ can put in a "-" as the message.
 My purpose in developing this is to create a way for me to track my time with as
 little mental and time overhead as possible.
 
+## Using Track
+
+Track lives in your browser and at this time does not need to connect to a
+server. It uses HTML5 localStorage to store all your time information and that
+information will be saved between browser sessions and even computer restarts.
+
+To get started with Track, either clone the repository into a folder or download
+a ZIP of all the files and then open default.html in your modern browser of
+choice.
+
+Please note that while I use this application to track my time I do not
+recommend using it without extreme caution. I have not tested many situations or
+any other browsers than Chrome.
+
 ## Planned Additional Features
 
 * Edit the description of an item
