@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="stylesheet" type="text/css" href="./styles/main.css">
+</head>
+<body>
+	<header>
+		<div>
+			<h1 class="title">track</h1>
+		</div>
+	</header>
+	<section class="content">
+		<div class="left-pane">
+			<h3>Time</h3>
+			<div class="export-container">
+				<a href="javascript:void(0)" 
+				   class="export-times-to-csv">
+				   Export to CSV
+				</a>
+			</div>
+			<div class="overflow">
+				<ul class="time-list">
+				</ul>
+			</div>
+		<div class="input">
+			<div contenteditable></div>
+			<button>Add</button>
+		</div>
+		</div>
+		<div class="right-pane">
+			<h3>Totals</h3>
+			<div class='overflow'>
+				<ul class="totals-list">
+				</ul>
+			</div>
+			<div class="stats">
+				<div>
+					<label>Last 7 Days: </label>
+					<span class="last7Days"></span>
+				</div>
+			</div>
+		</div>
+	</section>
+	<footer>
+		<div>
+			<div class="logo">
+				<img src="media/perry-color-texas@2x.png" />
+				<p>
+					Designed and Developed<br>in Texas
+				</p>
+			</div>
+		</div>
+	</footer>
+	<script type="text/javascript" src="scripts/jquery-2.1.1.min.js" ></script>
+	<script type="text/javascript" src="scripts/utility.js" ></script>
+	<script type="text/javascript" src="scripts/track.js" ></script>
+</body>
+</html>
