@@ -2,7 +2,7 @@
 ## Overview
 
 Track is a very simple solution to my problems with tracking time. I came up
-with this idea while writing [this blog post][http://brunow.org/2014/12/09/how-i-track-time/].
+with this idea while writing [this blog post](http://brunow.org/2014/12/09/how-i-track-time/).
 
 The application has a similar interface to chat software. You put your message
 at the bottom of the pane on the left and it stores the timestamp of that
