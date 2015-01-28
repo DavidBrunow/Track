@@ -30,6 +30,8 @@ any other browsers than Chrome.
 ## Planned Additional Features
 
 * Edit the description of an item
+* Add ability to press the up arrow while in the time input field to scroll
+  through previously added times, similar to a command prompt in a terminal
 * Use a delimiter to describe multiple similar items, such as "Project - Task"
   or perhaps "Client - Project - Task"
 * Allow for customizable settings for the "end time" message (currently "-")
