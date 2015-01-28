@@ -1,6 +1,7 @@
 var Application = function () 
 {
 	this.times = [];
+	this.currentTimeIndex = -1;
 	this.totalTimes = [];
 	this.totalLast7Days = 0;
 	this.workStoppedSymbol = "-";
@@ -118,6 +119,38 @@ var Application = function ()
 			if(event.keyCode === 13)
 			{
 				$("div.input").find("button").trigger("click");
+			}
+			else if(event.keyCode === 38)
+			{
+				if(self.currentTimeIndex === -1)
+				{
+					self.currentTimeIndex = self.times.length;
+				}
+
+				if(self.currentTimeIndex !== 0)
+				{
+					self.currentTimeIndex--;	
+				}
+
+				$(this).text(self.times[self.currentTimeIndex].Name);
+			}
+			else if(event.keyCode === 40)
+			{
+				if(self.currentTimeIndex === -1)
+				{
+					self.currentTimeIndex = self.times.length;
+				}
+
+				if(self.currentTimeIndex >= self.times.length - 1)
+				{
+					$(this).text("");
+				}
+				else
+				{
+					self.currentTimeIndex++;
+
+					$(this).text(self.times[self.currentTimeIndex].Name);
+				}
 			}
 		});
 
