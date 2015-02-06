@@ -211,7 +211,7 @@ var Application = function ()
 			hours = +(newTime.split(":")[0]),
 			minutes = +(newTime.split(":")[1].toLowerCase().replace(" pm", "").replace(" am", ""));
 
-		if(newTime.toLowerCase().indexOf("pm") !== -1 && hours !== 12 && self.is24HourClock === true)
+		if(newTime.toLowerCase().indexOf("pm") !== -1 && hours !== 12 && self.is24HourClock !== true)
 		{
 			hours += 12;
 		}
