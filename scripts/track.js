@@ -87,6 +87,10 @@ var Application = function ()
 		{
 			if($.trim($("div.input").find("div").eq(0).text()) !== "")
 			{
+				var needsSeparator = false;
+
+				self.currentTimeIndex = -1;
+
 				var newId = (self.times.length === 0 ? 0 : self.times[self.times.length - 1].id + 1),
 					time = {
 						"Name": $.trim($("div.input").find("div").eq(0).text()),
