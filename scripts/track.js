@@ -98,11 +98,21 @@ var Application = function ()
 						"id": newId
 					};
 
+				if(time.TimeStamp.getDate() !== self.times[self.times.length - 1].TimeStamp.getDate())
+				{
+					needsSeparator = true;
+				}
+
 				self.times.push(time);
 
 				timeStampString = get12HourTime(time.TimeStamp);
 
-				$("div.left-pane").find("ul").append($("<li data-id='" + time.id + "'><span class='timestamp'>" + timeStampString + "</span> " + time.Name + "</li>"));
+				if(needsSeparator === true)
+				{
+					$("div.left-pane").find("ul").append($("<li class='timestamp-date-separator'><span class='datestamp'>" + (time.TimeStamp.getMonth() + 1) + "/" + time.TimeStamp.getDate() + "/" + time.TimeStamp.getFullYear() + "</span></li>"));	
+				}
+
+				$("div.left-pane").find("ul").append($("<li data-id='" + time.id + "'><span class='timestamp'>" + timeStampString + "</span><span class='name'>" + time.Name + "</span></li>"));
 
 				self.saveTimes();
 
