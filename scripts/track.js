@@ -318,7 +318,17 @@ var Application = function ()
 				totalTime.TimeSpan = Math.round(totalTime.TimeSpan * 2) / 2;	
 			}
 
-			totalTimesList += "<li><span class='datestamp'>" + totalTime.Date + "</span> " + totalTime.Name + " - " + (totalTime.TimeSpan === null ? "In Progress" : totalTime.TimeSpan + (totalTime.TimeSpan === 1 ? " hour" : " hours")) + "</li>";
+			if(i > 0 && (new Date(self.totalTimes[i - 1].Date)).getDate() !== (new Date(totalTime.Date)).getDate())
+			{
+				var newDate = new Date(totalTime.Date);
+
+				totalTimesList += "<li class='timestamp-date-separator'><span class='datestamp'>" + (newDate.getMonth() + 1) + "/" + newDate.getDate() + "/" + newDate.getFullYear() + "</span></li>";
+			}
+
+			if(totalTime.Name !== "-")
+			{	
+				totalTimesList += "<li><span class='datestamp'>" + totalTime.Date + "</span> " + totalTime.Name + " - " + (totalTime.TimeSpan === null ? "In Progress" : totalTime.TimeSpan + (totalTime.TimeSpan === 1 ? " hour" : " hours")) + "</li>";
+			}
 		
 			if(new Date(totalTime.Date) > sevenDaysAgo && totalTime.Name !== self.workStoppedSymbol && totalTime.Name !== "")
 			{
