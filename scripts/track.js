@@ -51,7 +51,7 @@ var Application = function ()
 				timesList += "<li class='timestamp-date-separator'><span class='datestamp'>" + (time.TimeStamp.getMonth() + 1) + "/" + time.TimeStamp.getDate() + "/" + time.TimeStamp.getFullYear() + "</span></li>";
 			}
 
-			timesList += "<li data-id='" + time.id + "'><span class='timestamp'>" + timeStampString + "</span> " + time.Name + "</li>";
+			timesList += "<li data-id='" + time.id + "'><span class='timestamp'>" + timeStampString + "</span><span class='name'>" + time.Name + "</span></li>";
 
 			previousTime = time;
 		}
@@ -197,6 +197,40 @@ var Application = function ()
 			}
 		});
 
+		//############
+
+		$("li").find("span.name").off("click");
+
+		$("li").find("span.name").on("click", function ()
+		{
+			$(this).hide();
+
+			$(this).after($("<input type='text' class='name' value='" + $(this).text() + "' />"));
+			$(this).closest("li").find("input[type=text]").focus();
+
+			self.setupEventHandling();
+		});
+
+		$("li").find("input[type=text].name").off("blur");
+
+		$("li").find("input[type=text].name").on("blur", function ()
+		{
+			self.validateNameInput(this);
+		});
+
+		$("li").find("input[type=text].name").off("keypress");
+
+		$("li").find("input[type=text].name").on("keypress", function (event)
+		{
+			if(event.keyCode === 13)
+			{
+				self.validateNameInput(this);	
+			}
+		});
+
+
+		//############
+
 		$("a.export-times-to-csv").off("click");
 
 		$("a.export-times-to-csv").on("click", function ()
@@ -206,6 +240,24 @@ var Application = function ()
 			});
 
 		$(".overflow").animate({ scrollTop: $('.overflow')[0].scrollHeight}, 1000);
+	};
+
+	this.validateNameInput = function (element)
+	{
+		var self = this;
+
+		if($(element).val() === "")
+		{
+			console.log("nope, invalid name!");
+		}
+		else
+		{
+			self.updateName(+($(element).closest("li").data("id")), $(element).val());
+
+			$(element).closest("li").find("span.name").text($(element).val());
+			$(element).closest("li").find("span.name").show();
+			$(element).remove();	
+		}
 	};
 
 	this.validateDateInput = function (element)
@@ -226,6 +278,21 @@ var Application = function ()
 			$(element).closest("li").find("span.timestamp").show();
 			$(element).remove();	
 		}
+	};
+
+	this.updateName = function (id, newName)
+	{
+		var self = this,
+			time = self.times[self.times.indexOfPropertyValue([
+			{
+				"prop": "id",
+				"value": id
+			}
+		])];
+
+		time.Name = newName;
+
+		self.saveTimes();
 	};
 
 	this.updateTime = function (id, newTime)
