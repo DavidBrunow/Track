@@ -29,7 +29,6 @@ any other browsers than Chrome.
 
 ## Planned Additional Features
 
-* Edit the description of an item
 * Use a delimiter to describe multiple similar items, such as "Project - Task"
   or perhaps "Client - Project - Task"
 * Allow for customizable settings for the "end time" message (currently "-")
