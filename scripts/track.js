@@ -180,23 +180,20 @@ var Application = function ()
 			self.setupEventHandling();
 		});
 
-		$("input[type=text].timestamp").off("blur");
+		$("li").find("input[type=text].timestamp").off("blur");
 
 		$("li").find("input[type=text].timestamp").on("blur", function ()
 		{
-			if($(this).val().indexOf(":") === -1 || (self.is24HourClock === false 
-				&& $(this).val().toLowerCase().indexOf(" am") === -1
-				&& $(this).val().toLowerCase().indexOf(" pm") === -1))
-			{
-				console.log("nope, invalid date!");
-			}
-			else
-			{
-				self.updateTime(+($(this).closest("li").data("id")), $(this).val());
+			self.validateDateInput(this);
+		});
 
-				$(this).closest("li").find("span.timestamp").text($(this).val());
-				$(this).closest("li").find("span.timestamp").show();
-				$(this).remove();	
+		$("li").find("input[type=text].timestamp").off("keypress");
+
+		$("li").find("input[type=text].timestamp").on("keypress", function (event)
+		{
+			if(event.keyCode === 13)
+			{
+				self.validateDateInput(this);	
 			}
 		});
 
@@ -209,6 +206,26 @@ var Application = function ()
 			});
 
 		$(".overflow").animate({ scrollTop: $('.overflow')[0].scrollHeight}, 1000);
+	};
+
+	this.validateDateInput = function (element)
+	{
+		var self = this;
+
+		if($(element).val().indexOf(":") === -1 || (self.is24HourClock === false 
+			&& $(element).val().toLowerCase().indexOf(" am") === -1
+			&& $(element).val().toLowerCase().indexOf(" pm") === -1))
+		{
+			console.log("nope, invalid date!");
+		}
+		else
+		{
+			self.updateTime(+($(element).closest("li").data("id")), $(element).val());
+
+			$(element).closest("li").find("span.timestamp").text($(element).val());
+			$(element).closest("li").find("span.timestamp").show();
+			$(element).remove();	
+		}
 	};
 
 	this.updateTime = function (id, newTime)
