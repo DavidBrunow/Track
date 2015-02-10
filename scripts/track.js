@@ -98,7 +98,7 @@ var Application = function ()
 						"id": newId
 					};
 
-				if(time.TimeStamp.getDate() !== self.times[self.times.length - 1].TimeStamp.getDate())
+				if(self.times.length > 0 && time.TimeStamp.getDate() !== self.times[self.times.length - 1].TimeStamp.getDate())
 				{
 					needsSeparator = true;
 				}
