@@ -11,7 +11,10 @@ many hours were spent on that item throughout the day. If you stop working you
 can put in a "-" as the message.
 
 My purpose in developing this is to create a way for me to track my time with as
-little mental and time overhead as possible.
+little mental and time overhead as possible. Track would not be very good for
+large teams because the beauty of it is that it does not force users to input
+their time information in any particular way. I think it is great for
+individuals and small, closely knit teams.
 
 ## Using Track
 
