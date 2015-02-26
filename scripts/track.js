@@ -3,6 +3,7 @@ var Application = function ()
 	this.times = [];
 	this.currentTimeIndex = -1;
 	this.totalTimes = [];
+	this.totalClientTimes = [];
 	this.totalLast7Days = 0;
 	this.workStoppedSymbol = "-";
 	this.roundToMinutes = 30;
@@ -27,7 +28,6 @@ var Application = function ()
 		if("undefined" !== typeof localStorage.times && null !== localStorage.times)
 		{
 			self.times = JSON.parse(localStorage.times);
-			console.log("Times:", self.times);
 		}
 
 		for(var i = 0, timesLength = self.times.length; i < timesLength; i++)
@@ -59,6 +59,8 @@ var Application = function ()
 		$("div.left-pane").find("ul").append($(timesList));
 
 		self.calculateTotals();
+		self.calculateTotalsByClient();
+		self.displayTotals();
 	};
 
 	var get12HourTime = function (dateTime)
@@ -197,8 +199,6 @@ var Application = function ()
 			}
 		});
 
-		//############
-
 		$("li").find("span.name").off("click");
 
 		$("li").find("span.name").on("click", function ()
@@ -227,9 +227,6 @@ var Application = function ()
 				self.validateNameInput(this);	
 			}
 		});
-
-
-		//############
 
 		$("a.export-times-to-csv").off("click");
 
@@ -387,8 +384,101 @@ var Application = function ()
 			}
 
 		}
+	};
 
-		var totalTimesList = "",
+	this.calculateTotalsByClient = function ()
+	{
+		var self = this,
+			thisTotalTime,
+			thisClient,
+			clients = [],
+			timeObject;
+
+		self.totalClientTimes = [];
+
+		for(var i = 0, totalTimesLength = self.totalTimes.length; i < totalTimesLength; i++)
+		{
+			thisTotalTime = self.totalTimes[i];
+			thisClient = thisTotalTime.Name;
+
+			if(thisClient.indexOf("-") !== -1)
+			{
+				thisClient = $.trim(thisClient.split("-")[0]);
+			}
+
+			timeObject = {
+				"Date": thisTotalTime.Date,
+				"TimeSpan": thisTotalTime.TimeSpan
+			};
+
+			if(clients.indexOf(thisClient) === -1
+			   && thisClient !== "")
+			{
+				clients.push(thisClient);
+
+				self.totalClientTimes.push({
+					"Client": thisClient,
+					"Times": [],
+					"Days": []
+				});
+
+				self.totalClientTimes[self.totalClientTimes.length - 1].Times.push(timeObject);
+			}
+			else if(thisClient !== "")
+			{
+				self.totalClientTimes[self.totalClientTimes.indexOfPropertyValue([{
+					"prop": "Client",
+					"value": thisClient
+				}])].Times.push(timeObject);
+			}
+		}
+
+		var totalClient,
+			totalClientTime,
+			thisClientDate;
+
+		for(var i = 0, totalClientsLength = self.totalClientTimes.length; i < totalClientsLength; i++)
+		{
+			totalClient = self.totalClientTimes[i];
+
+			for(var j = 0, totalClientTimesLength = totalClient.Times.length; j < totalClientTimesLength; j++)
+			{
+				totalClientTime = totalClient.Times[j];
+
+				if(self.roundToMinutes === 30)
+				{
+					totalClientTime.TimeSpanRaw = totalClientTime.TimeSpan;
+					totalClientTime.TimeSpan = Math.round(totalClientTime.TimeSpan * 2) / 2;	
+				}
+
+				if(j === 0
+				   || thisClientDate !== totalClientTime.Date)
+				{
+					thisClientDate = totalClientTime.Date;
+
+					totalClient.Days.push(
+					{
+						"Day": thisClientDate,
+						"TotalTime": totalClientTime.TimeSpan
+					});
+				}
+				else if(thisClientDate === totalClientTime.Date)
+				{
+					totalClient.Days[totalClient.Days.indexOfPropertyValue([{
+						prop: "Day",
+						value: thisClientDate
+					}])].TotalTime += +(totalClientTime.TimeSpan);
+				}
+			}
+		}
+	};
+
+	this.displayTotals = function ()
+	{
+		var self = this,
+			clientDayIndex,
+			clientTotalTime,
+			totalTimesList = "",
 			totalTime = null
 			today = new Date(),
 			sevenDaysAgo = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 7);
@@ -399,12 +489,27 @@ var Application = function ()
 
 			if(self.roundToMinutes === 30)
 			{
+				totalTime.TimeSpanRaw = totalTime.TimeSpan;
 				totalTime.TimeSpan = Math.round(totalTime.TimeSpan * 2) / 2;	
 			}
 
 			if(i > 0 && (new Date(self.totalTimes[i - 1].Date)).getDate() !== (new Date(totalTime.Date)).getDate())
 			{
 				var newDate = new Date(totalTime.Date);
+
+				for(var j = 0, totalClientTimesLength = self.totalClientTimes.length; j < totalClientTimesLength; j++)
+				{
+					clientTotalTime = self.totalClientTimes[j];
+					clientDayIndex = clientTotalTime.Days.indexOfPropertyValue([{
+							prop: "Day",
+							value: self.totalTimes[i - 1].Date
+						}]);
+					
+					if(clientDayIndex !== -1)
+					{
+						totalTimesList += "<li class='daily-total'><span>TOTAL - " + clientTotalTime.Client + " - " + (clientTotalTime.Days[clientDayIndex].TotalTime + (clientTotalTime.Days[clientDayIndex].TotalTime === 1 ? " hour" : " hours")) + "</span></li>";
+					}
+				}
 
 				totalTimesList += "<li class='timestamp-date-separator'><span class='datestamp'>" + (newDate.getMonth() + 1) + "/" + newDate.getDate() + "/" + newDate.getFullYear() + "</span></li>";
 			}
@@ -424,7 +529,8 @@ var Application = function ()
 
 		$("div.right-pane").find("ul").html("");
 		$("div.right-pane").find("ul").append($(totalTimesList));
-		console.log(self.totalTimes);
+
+		console.log(self.totalClientTimes);
 	};
 }
 

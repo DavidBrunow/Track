@@ -32,6 +32,11 @@ header h1.title
 	margin-top: 35px;
 }
 
+.daily-total
+{
+	text-align: right;
+}
+
 footer
 {
 	background-color: #3A0042;
