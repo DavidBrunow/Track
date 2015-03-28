@@ -58,10 +58,8 @@ var Application = function ()
 
 		$("div.left-pane").find("ul").append($(timesList));
 
-		self.calculateTotals();
-		self.calculateTotalsByClient();
-		self.displayTotals();
-	};
+		self.updateTotals();
+	};	
 
 	var get12HourTime = function (dateTime)
 	{
@@ -324,7 +322,16 @@ var Application = function ()
 
 		localStorage.times = JSON.stringify(self.times);
 
+		self.updateTotals();
+	};
+
+	this.updateTotals = function ()
+	{
+		var self = this;
+
 		self.calculateTotals();
+		self.calculateTotalsByClient();
+		self.displayTotals();
 	};
 
 	this.calculateTotals = function ()
@@ -493,7 +500,13 @@ var Application = function ()
 				totalTime.TimeSpan = Math.round(totalTime.TimeSpan * 2) / 2;	
 			}
 
-			if(i > 0 && (new Date(self.totalTimes[i - 1].Date)).getDate() !== (new Date(totalTime.Date)).getDate())
+			if(totalTime.Name !== "-")
+			{	
+				totalTimesList += "<li><span class='datestamp'>" + totalTime.Date + "</span> " + totalTime.Name + " - " + (totalTime.TimeSpan === null ? "In Progress" : totalTime.TimeSpan + (totalTime.TimeSpan === 1 ? " hour" : " hours")) + "</li>";
+			}
+
+			if((i > 0 && (new Date(self.totalTimes[i - 1].Date)).getDate() !== (new Date(totalTime.Date)).getDate()) 
+				|| i === self.totalTimes.length - 1)
 			{
 				var newDate = new Date(totalTime.Date);
 
@@ -511,12 +524,10 @@ var Application = function ()
 					}
 				}
 
-				totalTimesList += "<li class='timestamp-date-separator'><span class='datestamp'>" + (newDate.getMonth() + 1) + "/" + newDate.getDate() + "/" + newDate.getFullYear() + "</span></li>";
-			}
-
-			if(totalTime.Name !== "-")
-			{	
-				totalTimesList += "<li><span class='datestamp'>" + totalTime.Date + "</span> " + totalTime.Name + " - " + (totalTime.TimeSpan === null ? "In Progress" : totalTime.TimeSpan + (totalTime.TimeSpan === 1 ? " hour" : " hours")) + "</li>";
+				if(i !== self.totalTimes.length - 1)
+				{
+					totalTimesList += "<li class='timestamp-date-separator'><span class='datestamp'>" + (newDate.getMonth() + 1) + "/" + newDate.getDate() + "/" + newDate.getFullYear() + "</span></li>";	
+				}
 			}
 		
 			if(new Date(totalTime.Date) > sevenDaysAgo && totalTime.Name !== self.workStoppedSymbol && totalTime.Name !== "")
