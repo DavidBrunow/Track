@@ -488,11 +488,16 @@ var Application = function ()
 			totalTimesList = "",
 			totalTime = null
 			today = new Date(),
-			sevenDaysAgo = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 7);
+			sevenDaysAgo = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 7),
+			isLastForDay = false,
+			isFirstForDay = false;
 
 		for(var i = 0, totalTimesLength = self.totalTimes.length; i < totalTimesLength; i++)
 		{
 			totalTime = self.totalTimes[i];
+			isFirstForDay = (i > 0 && (new Date(self.totalTimes[i - 1].Date)).getDate() !== (new Date(totalTime.Date)).getDate()) 
+				|| i === self.totalTimes.length - 1;
+			isLastForDay = (i < self.totalTimes.length - 2 && (new Date(self.totalTimes[i + 1].Date)).getDate() !== (new Date(totalTime.Date)).getDate()) || i === self.totalTimes.length - 1;
 
 			if(self.roundToMinutes === 30)
 			{
@@ -500,16 +505,23 @@ var Application = function ()
 				totalTime.TimeSpan = Math.round(totalTime.TimeSpan * 2) / 2;	
 			}
 
+			if(isFirstForDay)
+			{
+				var newDate = new Date(totalTime.Date);
+
+				if(i !== self.totalTimes.length - 1)
+				{
+					totalTimesList += "<li class='timestamp-date-separator'><span class='datestamp'>" + (newDate.getMonth() + 1) + "/" + newDate.getDate() + "/" + newDate.getFullYear() + "</span></li>";	
+				}
+			}
+			
 			if(totalTime.Name !== "-")
 			{	
 				totalTimesList += "<li><span class='datestamp'>" + totalTime.Date + "</span> " + totalTime.Name + " - " + (totalTime.TimeSpan === null ? "In Progress" : totalTime.TimeSpan + (totalTime.TimeSpan === 1 ? " hour" : " hours")) + "</li>";
 			}
 
-			if((i > 0 && (new Date(self.totalTimes[i - 1].Date)).getDate() !== (new Date(totalTime.Date)).getDate()) 
-				|| i === self.totalTimes.length - 1)
+			if(isLastForDay)
 			{
-				var newDate = new Date(totalTime.Date);
-
 				for(var j = 0, totalClientTimesLength = self.totalClientTimes.length; j < totalClientTimesLength; j++)
 				{
 					clientTotalTime = self.totalClientTimes[j];
@@ -523,17 +535,14 @@ var Application = function ()
 						totalTimesList += "<li class='daily-total'><span>TOTAL - " + clientTotalTime.Client + " - " + (clientTotalTime.Days[clientDayIndex].TotalTime + (clientTotalTime.Days[clientDayIndex].TotalTime === 1 ? " hour" : " hours")) + "</span></li>";
 					}
 				}
-
-				if(i !== self.totalTimes.length - 1)
-				{
-					totalTimesList += "<li class='timestamp-date-separator'><span class='datestamp'>" + (newDate.getMonth() + 1) + "/" + newDate.getDate() + "/" + newDate.getFullYear() + "</span></li>";	
-				}
 			}
 		
 			if(new Date(totalTime.Date) > sevenDaysAgo && totalTime.Name !== self.workStoppedSymbol && totalTime.Name !== "")
 			{
 				self.totalLast7Days += totalTime.TimeSpan;
 			}
+
+
 		}
 
 		$(".last7Days").text(self.totalLast7Days);
