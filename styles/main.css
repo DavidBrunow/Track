@@ -20,8 +20,9 @@ header
 header > div
 {
 	margin: 0 auto;
+	min-width: 1000px;
 	padding: 0;
-	width: 1000px;
+	width: 90%;
 }
 
 header h1.title
@@ -85,7 +86,8 @@ footer div.logo p
 section.content
 {
 	margin: 75px auto;
-	width: 1000px;	
+	min-width: 1000px;
+	width: 90%;	
 }
 
 
@@ -165,7 +167,8 @@ div.input
 	margin-top: 15px;
 	padding: 5px;
 	position: relative;
-	width: 438px;
+	min-width: 438px;
+	width: 98.25%;
 }
 
 div.input div:before
@@ -185,8 +188,14 @@ div.input div
 	width: 85%;
 }
 
-input.timestamp {
+input.timestamp 
+{
 	width: 55px;
+}
+
+input.name
+{
+	width: 80%;
 }
 
 div.export-container {
